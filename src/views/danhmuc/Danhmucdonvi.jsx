@@ -21,31 +21,32 @@ const EditableCell = ({ editing, dataIndex, children, ...restProps }) => {
 };
 
 export default function Danhmucdonvi() {
-  const { donvis, fetchDonVis, createDonVi, updateDonVi, deleteDonVi } = useDonViStore();
+  const { donvis, fetchDonVis, createDonVi, updateDonVi, deleteDonVi, loading } = useDonViStore();
   const [form] = Form.useForm();
-  const [data, setData] = useState([]);
+  // const [data, setData] = useState([]);
   const [editingKey, setEditingKey] = useState('');
-  const [loading, setLoading] = useState(false);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [searchText, setSearchText] = useState('');
 
   // ================= LOAD DATA =================
-  useEffect(() => {
-    fetchData();
-  }, []);
-  console.log(donvis);
-  const fetchData = async () => {
-    try {
-      setLoading(true);
-      await fetchDonVis();
-      setData(donvis.map((item) => ({ ...item, key: item.id })));
-    } catch (err) {
-      message.error('Không tải được dữ liệu');
-    } finally {
-      setLoading(false);
-    }
-  };
+  // useEffect(() => {
+  //   fetchData();
+  // }, []);
 
+  // const fetchData = async () => {
+  //   try {
+  //     loading(true);
+  //     await fetchDonVis();
+  //     setData(donvis.map((item) => ({ ...item, key: item.id })));
+  //   } catch (err) {
+  //     message.error('Không tải được dữ liệu');
+  //   } finally {
+  //     loading(false);
+  //   }
+  // };
+  console.log('donvis', donvis);
+  const data = donvis.map((item) => ({ ...item, key: item.id }));
+  console.log('data don vi', data);
   // ================= EDIT =================
   const isEditing = (record) => record.key === editingKey;
 
@@ -75,7 +76,7 @@ export default function Danhmucdonvi() {
         tendv: row.tendv
       };
 
-      setLoading(true);
+      loading();
 
       if ((key + '').startsWith('new_')) {
         await createDonVi(payload);
@@ -92,14 +93,14 @@ export default function Danhmucdonvi() {
     } catch (err) {
       message.error('Lưu thất bại');
     } finally {
-      setLoading(false);
+      loading();
     }
   };
 
   // ================= DELETE =================
   const handleDelete = async (record) => {
     try {
-      setLoading(true);
+      loading();
 
       if ((record.key + '').startsWith('new_')) {
         setData((prev) => prev.filter((i) => i.key !== record.key));
@@ -112,7 +113,7 @@ export default function Danhmucdonvi() {
     } catch (err) {
       message.error('Xóa thất bại');
     } finally {
-      setLoading(false);
+      loading();
     }
   };
 
@@ -189,7 +190,7 @@ export default function Danhmucdonvi() {
     }
 
     try {
-      setLoading(true);
+      loading();
 
       const rowsToDelete = data.filter((item) => selectedRowKeys.includes(item.key));
 
@@ -210,7 +211,7 @@ export default function Danhmucdonvi() {
       console.error(err);
       message.error('Xóa nhiều dòng thất bại');
     } finally {
-      setLoading(false);
+      loading();
     }
   };
 

@@ -26,7 +26,8 @@ export default function UsersMap({ height }) {
         { coords: [-15.7939, -47.8825], name: 'Brazil' },
         { coords: [24.7743, 47.7439], name: 'Saudi Arabia' },
         { coords: [35.8617, 104.1954], name: 'China' },
-        { coords: [61.524, 105.3188], name: 'Russia' }
+        { coords: [61.524, 105.3188], name: 'Russia' },
+        { coords: [65.524, 60.3188], name: 'VietNam' }
       ]
     });
   }, []);

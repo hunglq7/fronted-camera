@@ -26,7 +26,7 @@ export default function ActionBar({ handleOpenAdd, onDeleteMultiple, selectedRow
       </Col>
 
       <Col>
-        <Button icon={<DownloadOutlined />} onClick={handleExportExcel}>
+        <Button color="primary" variant="outlined" icon={<DownloadOutlined />} onClick={handleExportExcel}>
           Xuất Excel
         </Button>
       </Col>

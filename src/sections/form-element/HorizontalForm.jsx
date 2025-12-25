@@ -47,7 +47,7 @@ export default function HorizontalForm() {
               <Form.Check type="checkbox" label="Example checkbox" name="formHorizontalRadios" id="formHorizontalRadios1" />
             </Col>
           </Row>
-          <Button type="submit" className="mb-4">
+          <Button size="sm" type="submit" className="mb-4">
             Sign in
           </Button>
         </Col>

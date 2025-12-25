@@ -10,7 +10,7 @@ import capnhatthietbi from './capnhatthietbi';
 // ==============================|| MENU ITEMS ||============================== //
 
 const menuItems = {
-  items: [navigation, capnhatthietbi, pages]
+  items: [navigation, capnhatthietbi, pages, formComponents]
 };
 
 export default menuItems;
