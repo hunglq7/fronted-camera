@@ -45,5 +45,18 @@ export const useDonViStore = create((set, get) => ({
       message.error("Failed to delete donvi");
       set({ loading: false });
     }
+  },
+  deleteMany: async (ids) => {
+  set({ loading: true });
+  try {
+    await donviService.deleteMany(ids);
+    set({
+      donvis: get().donvis.filter((dv) => !ids.includes(dv.id)),
+      loading: false
+    });
+  } catch {
+    message.error('Xóa nhiều thất bại');
+    set({ loading: false });
   }
+}
 }));

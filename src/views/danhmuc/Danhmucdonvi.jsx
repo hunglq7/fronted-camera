@@ -1,268 +1,221 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Table, Form, Input, Button, Space, Popconfirm, message, Row } from 'antd';
 import { EditOutlined, DeleteOutlined, SaveOutlined, CloseOutlined } from '@ant-design/icons';
 import * as XLSX from 'xlsx';
+
 import SearchBar from '/src/components/SearchBar';
 import ActionBar from '/src/components/ActionBar';
 import { useDonViStore } from '/src/stores/donviStore';
-// ================= EDIT ABLECELL =================
-const EditableCell = ({ editing, dataIndex, children, ...restProps }) => {
-  return (
-    <td {...restProps}>
-      {editing ? (
-        <Form.Item name={dataIndex} style={{ margin: 0 }}>
-          <Input />
-        </Form.Item>
-      ) : (
-        children
-      )}
-    </td>
-  );
-};
+
+/* ================= Editable Cell ================= */
+const EditableCell = ({ editing, dataIndex, record, children, ...rest }) => (
+  <td {...rest}>
+    {editing ? (
+      <Form.Item name={[record.key, dataIndex]} rules={[{ required: true, message: 'Không được để trống' }]} style={{ margin: 0 }}>
+        <Input />
+      </Form.Item>
+    ) : (
+      children
+    )}
+  </td>
+);
 
 export default function Danhmucdonvi() {
-  const { donvis, fetchDonVis, createDonVi, updateDonVi, deleteDonVi, loading } = useDonViStore();
+  const { donvis, fetchDonVis, createDonVi, updateDonVi, deleteDonVi, deleteMany, loading } = useDonViStore();
+
   const [form] = Form.useForm();
-  // const [data, setData] = useState([]);
   const [editingKey, setEditingKey] = useState('');
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [searchText, setSearchText] = useState('');
 
-  // ================= LOAD DATA =================
-  // useEffect(() => {
-  //   fetchData();
-  // }, []);
+  /* ================= LOAD DATA ================= */
+  useEffect(() => {
+    fetchDonVis();
+  }, []);
 
-  // const fetchData = async () => {
-  //   try {
-  //     loading(true);
-  //     await fetchDonVis();
-  //     setData(donvis.map((item) => ({ ...item, key: item.id })));
-  //   } catch (err) {
-  //     message.error('Không tải được dữ liệu');
-  //   } finally {
-  //     loading(false);
-  //   }
-  // };
-  console.log('donvis', donvis);
-  const data = donvis.map((item) => ({ ...item, key: item.id }));
-  console.log('data don vi', data);
-  // ================= EDIT =================
+  /* ================= DATASOURCE ================= */
+  const dataSource = useMemo(
+    () =>
+      donvis.map((i) => ({
+        ...i,
+        key: i.key ?? i.id
+      })),
+    [donvis]
+  );
+
+  /* ================= EDIT ================= */
   const isEditing = (record) => record.key === editingKey;
 
   const edit = (record) => {
     form.setFieldsValue({
+      // [record.key]: { tendv: record.tendv }
       tendv: record.tendv
     });
     setEditingKey(record.key);
   };
 
   // ================= CANCEL =================
-  const cancel = () => {
-    if ((editingKey + '').startsWith('new_')) {
-      setData((prev) => prev.filter((i) => i.key !== editingKey));
-    }
-    setEditingKey('');
-  };
+
+  const cancel = () => setEditingKey('');
 
   // ================= SAVE =================
   const save = async (key) => {
     try {
-      const row = await form.validateFields();
-      const record = data.find((i) => i.key === key);
+      const values = await form.validateFields();
+      const row = values[key];
+      if (!row) return;
 
-      const payload = {
-        id: record.id ?? 0,
-        tendv: row.tendv
-      };
+      const record = dataSource.find((i) => i.key === key);
 
-      loading();
-
-      if ((key + '').startsWith('new_')) {
-        await createDonVi(payload);
+      if (record.isNew) {
+        await createDonVi(row);
         message.success('Thêm thành công');
-        fetchDonVis();
       } else {
-        await updateDonVi(record.id, payload);
-        fetchDonVis();
+        await updateDonVi(record.id, row);
         message.success('Cập nhật thành công');
-        setData((prev) => prev.map((item) => (item.key === key ? { ...item, ...payload } : item)));
       }
 
       setEditingKey('');
-    } catch (err) {
+      fetchDonVis();
+    } catch {
       message.error('Lưu thất bại');
-    } finally {
-      loading();
     }
   };
 
-  // ================= DELETE =================
-  const handleDelete = async (record) => {
-    try {
-      loading();
+  /* ================= ADD ================= */
+  const handleAdd = () => {
+    if (editingKey) return message.warning('Đang chỉnh sửa dòng khác');
 
-      if ((record.key + '').startsWith('new_')) {
-        setData((prev) => prev.filter((i) => i.key !== record.key));
-      } else {
-        await deleteDonVi(record.id);
-        setData((prev) => prev.filter((i) => i.key !== record.key));
-      }
-
-      message.success('Đã xóa');
-    } catch (err) {
-      message.error('Xóa thất bại');
-    } finally {
-      loading();
-    }
-  };
-
-  // ================= ADD-NEW=================
-
-  const handleOpenAdd = () => {
     const key = `new_${Date.now()}`;
     const newRow = {
       key,
       id: null,
-      tendv: ''
+      tendv: '',
+      isNew: true
     };
-    setData((prev) => [newRow, ...prev]);
-    form.setFieldsValue(newRow);
+
+    useDonViStore.setState({
+      donvis: [newRow, ...donvis]
+    });
+
+    form.setFieldsValue({
+      [key]: { tendv: '' }
+    });
+
     setEditingKey(key);
   };
 
-  const columns = [
+  /* ================= DELETE ================= */
+  const handleDelete = async (record) => {
+    if (record.isNew) {
+      useDonViStore.setState({
+        donvis: donvis.filter((i) => i.key !== record.key)
+      });
+      return;
+    }
+    await deleteDonVi(record.id);
+    message.success('Đã xóa');
+  };
+
+  /* ================= DELETE MANY ================= */
+  const handleDeleteMultiple = async () => {
+    if (!selectedRowKeys.length) {
+      return message.warning('Chưa chọn dòng nào');
+    }
+
+    const ids = dataSource
+      .filter((i) => selectedRowKeys.includes(i.key))
+      .map((i) => i.id)
+      .filter(Boolean);
+
+    await deleteMany(ids);
+    setSelectedRowKeys([]);
+    message.success(`Đã xóa ${ids.length} dòng`);
+  };
+
+  /* ================= SEARCH ================= */
+  const filteredData = useMemo(() => {
+    if (!searchText) return dataSource;
+    return dataSource.filter((i) => i.tendv?.toLowerCase().includes(searchText.toLowerCase()));
+  }, [dataSource, searchText]);
+
+  /* ================= EXPORT ================= */
+  const handleExportExcel = () => {
+    const data = filteredData.map((i, idx) => ({
+      STT: idx + 1,
+      'Tên đơn vị': i.tendv
+    }));
+
+    const ws = XLSX.utils.json_to_sheet(data);
+    ws['!cols'] = [{ wch: 5 }, { wch: 30 }];
+
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'DanhMucDonVi');
+    XLSX.writeFile(wb, 'Danh_muc_don_vi.xlsx');
+  };
+
+  /* ================= COLUMNS ================= */
+  const mergedColumns = [
     {
       title: 'Tên đơn vị',
       dataIndex: 'tendv',
       editable: true
     },
-
     {
       title: 'Hành động',
-      render: (_, record) => {
-        const editing = isEditing(record);
-        return editing ? (
+      width: 150,
+      render: (_, record) =>
+        isEditing(record) ? (
           <Space>
             <Button type="primary" icon={<SaveOutlined />} onClick={() => save(record.key)} />
             <Button icon={<CloseOutlined />} onClick={cancel} />
           </Space>
         ) : (
           <Space>
-            <Button icon={<EditOutlined />} onClick={() => edit(record)} disabled={editingKey !== ''} />
-            <Popconfirm title="Bạn có chắc muốn xóa?" onConfirm={() => handleDelete(record)}>
+            <Button icon={<EditOutlined />} disabled={!!editingKey} onClick={() => edit(record)} />
+            <Popconfirm title="Xóa?" onConfirm={() => handleDelete(record)}>
               <Button danger icon={<DeleteOutlined />} />
             </Popconfirm>
           </Space>
-        );
-      }
+        )
     }
-  ];
+  ].map((col) =>
+    col.editable
+      ? {
+          ...col,
+          onCell: (record) => ({
+            record,
+            dataIndex: col.dataIndex,
+            editing: isEditing(record)
+          })
+        }
+      : col
+  );
 
-  const mergedColumns = columns.map((col) => {
-    if (!col.editable) return col;
-    return {
-      ...col,
-      onCell: (record) => ({
-        record,
-        dataIndex: col.dataIndex,
-        editing: isEditing(record)
-      })
-    };
-  });
-  //Khai báo biến chọn dòng dữ liệu
-  // ================= SELECT-ROW =================
-  const rowSelection = {
-    selectedRowKeys,
-    onChange: (keys) => {
-      setSelectedRowKeys(keys);
-    },
-    getCheckboxProps: (record) => ({
-      disabled: editingKey !== '' && record.key !== editingKey
-    })
-  };
-
-  // ================= DELETE-SELECT =================
-  const handleDeleteMultiple = async () => {
-    if (selectedRowKeys.length === 0) {
-      message.warning('Vui lòng chọn ít nhất một dòng');
-      return;
-    }
-
-    try {
-      loading();
-
-      const rowsToDelete = data.filter((item) => selectedRowKeys.includes(item.key));
-
-      // 👉 LẤY DANH SÁCH ID (chỉ những dòng đã lưu DB)
-      const ids = rowsToDelete.filter((item) => item.id).map((item) => item.id);
-      console.log(ids);
-      // 👉 GỌI API 1 LẦN DUY NHẤT
-      if (ids.length > 0) {
-        // await danhmucmaycaoService.deleteDanhmucmaycaos(ids);
-      }
-
-      // 👉 CẬP NHẬT UI
-      setData((prev) => prev.filter((item) => !selectedRowKeys.includes(item.key)));
-
-      setSelectedRowKeys([]);
-      message.success(`Đã xóa ${rowsToDelete.length} dòng`);
-    } catch (err) {
-      console.error(err);
-      message.error('Xóa nhiều dòng thất bại');
-    } finally {
-      loading();
-    }
-  };
-
-  // ================= SEARCH =================
-  const filteredData = useMemo(() => {
-    if (!searchText) return data;
-    return data.filter((item) => Object.values(item).join(' ').toLowerCase().includes(searchText.toLowerCase()));
-  }, [data, searchText]);
-  1;
-  // ================= EXPORT EXCEL =================
-  const handleExportExcel = () => {
-    // Map dữ liệu theo cột và tiêu đề tiếng Việt
-    const exportData = filteredData.map((item, index) => ({
-      STT: index + 1,
-      'Tên đơn vị': item.tendv
-    }));
-
-    const worksheet = XLSX.utils.json_to_sheet(exportData, {
-      header: ['STT', 'Tên đơn vị']
-    });
-
-    // Set độ rộng cột
-    worksheet['!cols'] = [{ wch: 5 }, { wch: 25 }];
-
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, 'Danhmucdonvi');
-
-    XLSX.writeFile(workbook, 'Danh_muc_don_vi.xlsx');
-  };
   return (
-    <Form form={form} component={false}>
+    <Form form={form} component={false} preserve={false}>
       <Row gutter={8} style={{ marginBottom: 12 }}>
         <SearchBar onSearch={setSearchText} />
         <ActionBar
-          handleOpenAdd={handleOpenAdd}
+          handleOpenAdd={handleAdd}
           onDeleteMultiple={handleDeleteMultiple}
-          disabledDelete={selectedRowKeys.length === 0}
-          selectedRowKeys={selectedRowKeys}
+          disabledDelete={!selectedRowKeys.length}
           handleExportExcel={handleExportExcel}
         />
       </Row>
 
       <Table
-        rowSelection={rowSelection}
+        rowKey="key"
         components={{ body: { cell: EditableCell } }}
         bordered
+        loading={loading}
         dataSource={filteredData}
         columns={mergedColumns}
-        rowKey="key"
-        loading={loading}
-        pagination={{ pageSize: 6 }}
+        rowSelection={{
+          selectedRowKeys,
+          onChange: setSelectedRowKeys
+        }}
+        pagination={{ pageSize: 10 }}
       />
     </Form>
   );
