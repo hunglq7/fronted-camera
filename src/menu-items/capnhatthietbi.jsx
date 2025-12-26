@@ -18,10 +18,16 @@ const capnhatthietbi = {
           url: '/danhmuc/danhmucdonvi'
         },
         {
-          id: 'vattu',
-          title: 'Danh mục vật tư',
+          id: 'thietbi',
+          title: 'Danh mục thiết bị',
           type: 'item',
-          url: '/danhmuc/danhmucvattu'
+          url: '/danhmuc/danhmucthietbi'
+        },
+        {
+          id: 'khuvuc',
+          title: 'Danh mục khu vực',
+          type: 'item',
+          url: '/danhmuc/danhmuckhuvuc'
         }
       ]
     },

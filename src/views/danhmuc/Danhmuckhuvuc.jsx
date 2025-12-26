@@ -5,7 +5,7 @@ import * as XLSX from 'xlsx';
 import SearchBar from '/src/components/SearchBar';
 import ActionBar from '/src/components/ActionBar';
 import DonviForm from '/src/sections/donvi/DonviForm';
-import { useDonViStore } from '/src/stores/donviStore';
+import { useKhuVucStore } from '/src/stores/khuvucStore';
 
 function Danhmucdonvi() {
   const [openModal, setOpenModal] = useState(false);
@@ -14,14 +14,14 @@ function Danhmucdonvi() {
   const [searchText, setSearchText] = useState('');
   const [form] = Form.useForm();
 
-  const { donvis, loading, fetchDonVis, createDonVi, updateDonVi, deleteDonVi, deleteManyDonVi } = useDonViStore();
+  const { khuvucs, loading, fetchKhuVucs, createKhuVuc, updateKhuVuc, deleteKhuVuc, deleteManyKhuVuc } = useKhuVucStore();
 
   /** LOAD DATA */
   useEffect(() => {
-    fetchDonVis();
-  }, [fetchDonVis]);
+    fetchKhuVucs();
+  }, [fetchKhuVucs]);
 
-  const dataSource = useMemo(() => donvis.map((item) => ({ ...item, key: item.id })), [donvis]);
+  const dataSource = useMemo(() => khuvucs.map((item) => ({ ...item, key: item.id })), [khuvucs]);
 
   /** SEARCH */
   const filteredData = useMemo(() => {
@@ -40,7 +40,7 @@ function Danhmucdonvi() {
   const handleOpenEdit = (record) => {
     setEditing(record);
     form.setFieldsValue({
-      tendv: record.tendv
+      tenkv: record.tenkv
     });
     setOpenModal(true);
   };
@@ -49,14 +49,14 @@ function Danhmucdonvi() {
   const handleSubmit = async (values) => {
     try {
       if (editing) {
-        await updateDonVi(editing._id, values);
+        await updateKhuVuc(editing._id, values);
         message.success('Cập nhật thành công');
       } else {
-        await createDonVi(values);
+        await createKhuVuc(values);
         message.success('Thêm mới thành công');
       }
       setOpenModal(false);
-      fetchDonVis();
+      fetchKhuVucs();
     } catch (err) {
       console.error('UPDATE ERROR:', err);
       message.error('Lưu dữ liệu thất bại');
@@ -66,8 +66,8 @@ function Danhmucdonvi() {
   /** DELETE */
   const handleDelete = async (i) => {
     console.log(i);
-    await deleteDonVi(i);
-    fetchDonVis();
+    await deleteKhuVuc(i);
+    fetchKhuVucs();
     message.success('Xóa thành công');
   };
 
@@ -77,9 +77,9 @@ function Danhmucdonvi() {
       message.warning('Chưa chọn bản ghi');
       return;
     }
-    await deleteManyDonVi(selectedRowKeys);
+    await deleteManyKhuVuc(selectedRowKeys);
     setSelectedRowKeys([]);
-    fetchDonVis();
+    fetchKhuVucs();
     message.success('Xóa nhiều bản ghi thành công');
   };
 
@@ -87,17 +87,17 @@ function Danhmucdonvi() {
   const handleExportExcel = () => {
     const exportData = filteredData.map((item, index) => ({
       STT: index + 1,
-      'Tên đơn vị': item.tendv
+      'Tên khu vực': item.tenkv
     }));
 
     const ws = XLSX.utils.json_to_sheet(exportData);
     const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Don-vi');
-    XLSX.writeFile(wb, 'Danh-muc-don-vi.xlsx');
+    XLSX.utils.book_append_sheet(wb, ws, 'Khu-Vuc');
+    XLSX.writeFile(wb, 'Danh-muc-khu-vuc.xlsx');
   };
 
   const columns = [
-    { title: 'Tên đơn vị', dataIndex: 'tendv' },
+    { title: 'Tên khu vực', dataIndex: 'tenkv' },
     {
       title: 'Thao tác',
       render: (_, record) => (
@@ -133,7 +133,7 @@ function Danhmucdonvi() {
 
       <Modal
         open={openModal}
-        title={editing ? 'Cập nhật thiết bị' : 'Thêm mới thiết bị'}
+        title={editing ? 'Cập nhật khu vực' : 'Thêm mới khu vực'}
         footer={null}
         onCancel={() => setOpenModal(false)}
         zIndex={1500}

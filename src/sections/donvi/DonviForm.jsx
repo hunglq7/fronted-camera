@@ -1,0 +1,50 @@
+import React from 'react';
+import { SaveOutlined } from '@ant-design/icons';
+import { Input, Form, Flex, Space, Button } from 'antd';
+const { TextArea } = Input;
+
+function DonviForm({ onSubmit, form, onCancel }) {
+  const formItemLayout = {
+    labelCol: {
+      xs: { span: 24 },
+      sm: { span: 6 }
+    },
+    wrapperCol: {
+      xs: { span: 24 },
+      sm: { span: 17 }
+    }
+  };
+
+  return (
+    <Form form={form} onFinish={onSubmit} {...formItemLayout} initialValues={{ remember: true }}>
+      <Form.Item name="tendv" label="Tên đơn vị" rules={[{ required: true, message: 'Tên đơn vị không được để trống' }]}>
+        <Input />
+      </Form.Item>
+
+      <Form.Item>
+        <Flex justify="start">
+          <Space>
+            <Button
+              type="primary"
+              htmlType="submit" // 👈 gọi handleSubmit
+              icon={<SaveOutlined />}
+            >
+              Lưu
+            </Button>
+
+            <Button
+              onClick={() => {
+                form.resetFields(); // optional
+                onCancel?.(); // 👈 đóng form
+              }}
+            >
+              Hủy
+            </Button>
+          </Space>
+        </Flex>
+      </Form.Item>
+    </Form>
+  );
+}
+
+export default DonviForm;

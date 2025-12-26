@@ -6,8 +6,8 @@ import Loadable from 'components/Loadable';
 import ProtectRouter from './ProtectRouter';
 // render - Danh mục
 const DanhmucDonvi = Loadable(lazy(() => import('views/danhmuc/Danhmucdonvi')));
-const DanhmucVattu = Loadable(lazy(() => import('views/danhmuc/Danhmucvattu')));
-
+const DanhmucThietbi = Loadable(lazy(() => import('views/danhmuc/Danhmucthietbi')));
+const DanhmucKhuvuc = Loadable(lazy(() => import('views/danhmuc/Danhmuckhuvuc')));
 // render - Cạp nhật thiết bị
 const CapnhatCamera = Loadable(lazy(() => import('views/thietbi/CapnhatCamera')));
 
@@ -32,8 +32,12 @@ const CapnhatthietbiRouters = {
               element: <DanhmucDonvi />
             },
             {
-              path: 'danhmucvattu',
-              element: <DanhmucVattu />
+              path: 'danhmucthietbi',
+              element: <DanhmucThietbi />
+            },
+            {
+              path: 'danhmuckhuvuc',
+              element: <DanhmucKhuvuc />
             }
           ]
         },

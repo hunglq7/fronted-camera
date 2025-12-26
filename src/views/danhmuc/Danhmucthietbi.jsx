@@ -2,26 +2,27 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Table, Button, Popconfirm, message, Space, Form, Modal, Row } from 'antd';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import * as XLSX from 'xlsx';
+
 import SearchBar from '/src/components/SearchBar';
 import ActionBar from '/src/components/ActionBar';
-import DonviForm from '/src/sections/donvi/DonviForm';
-import { useDonViStore } from '/src/stores/donviStore';
+import ThietbiForm from '/src/sections/thietbi/ThietbiForm';
+import { useThietBiStore } from '/src/stores/thietbiStore';
 
-function Danhmucdonvi() {
+function DanhmucThietbi() {
   const [openModal, setOpenModal] = useState(false);
   const [editing, setEditing] = useState(null);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [searchText, setSearchText] = useState('');
   const [form] = Form.useForm();
 
-  const { donvis, loading, fetchDonVis, createDonVi, updateDonVi, deleteDonVi, deleteManyDonVi } = useDonViStore();
+  const { thietbis, loading, fetchThietBis, createThietBi, updateThietBi, deleteThietBi, deleteManyThietBi } = useThietBiStore();
 
   /** LOAD DATA */
   useEffect(() => {
-    fetchDonVis();
-  }, [fetchDonVis]);
+    fetchThietBis();
+  }, [fetchThietBis]);
 
-  const dataSource = useMemo(() => donvis.map((item) => ({ ...item, key: item.id })), [donvis]);
+  const dataSource = useMemo(() => thietbis.map((item) => ({ ...item, key: item.id })), [thietbis]);
 
   /** SEARCH */
   const filteredData = useMemo(() => {
@@ -40,7 +41,12 @@ function Danhmucdonvi() {
   const handleOpenEdit = (record) => {
     setEditing(record);
     form.setFieldsValue({
-      tendv: record.tendv
+      tentb: record.tentb,
+      hangsx: record.hangsx,
+      namsx: record.namsx,
+      nuocsx: record.nuocsx,
+      thongsokt: record.thongsokt,
+      ghichu: record.ghichu
     });
     setOpenModal(true);
   };
@@ -49,14 +55,14 @@ function Danhmucdonvi() {
   const handleSubmit = async (values) => {
     try {
       if (editing) {
-        await updateDonVi(editing._id, values);
+        await updateThietBi(editing._id, values);
         message.success('Cập nhật thành công');
       } else {
-        await createDonVi(values);
+        await createThietBi(values);
         message.success('Thêm mới thành công');
       }
       setOpenModal(false);
-      fetchDonVis();
+      fetchThietBis();
     } catch (err) {
       console.error('UPDATE ERROR:', err);
       message.error('Lưu dữ liệu thất bại');
@@ -65,9 +71,8 @@ function Danhmucdonvi() {
 
   /** DELETE */
   const handleDelete = async (i) => {
-    console.log(i);
-    await deleteDonVi(i);
-    fetchDonVis();
+    await deleteThietBi(i);
+    fetchThietBis();
     message.success('Xóa thành công');
   };
 
@@ -77,9 +82,9 @@ function Danhmucdonvi() {
       message.warning('Chưa chọn bản ghi');
       return;
     }
-    await deleteManyDonVi(selectedRowKeys);
+    await deleteManyThietBi(selectedRowKeys);
     setSelectedRowKeys([]);
-    fetchDonVis();
+    fetchThietBis();
     message.success('Xóa nhiều bản ghi thành công');
   };
 
@@ -87,17 +92,27 @@ function Danhmucdonvi() {
   const handleExportExcel = () => {
     const exportData = filteredData.map((item, index) => ({
       STT: index + 1,
-      'Tên đơn vị': item.tendv
+      'Tên thiết bị': item.tentb,
+      'Hãng SX': item.hangsx,
+      'Năm SX': item.namsx,
+      'Nước SX': item.nuocsx,
+      'Thông số KT': item.thongsokt,
+      'Ghi chú': item.ghichu
     }));
 
     const ws = XLSX.utils.json_to_sheet(exportData);
     const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Don-vi');
-    XLSX.writeFile(wb, 'Danh-muc-don-vi.xlsx');
+    XLSX.utils.book_append_sheet(wb, ws, 'ThietBi');
+    XLSX.writeFile(wb, 'Danh-muc-thiet-bi.xlsx');
   };
 
   const columns = [
-    { title: 'Tên đơn vị', dataIndex: 'tendv' },
+    { title: 'Tên thiết bị', dataIndex: 'tentb' },
+    { title: 'Hãng SX', dataIndex: 'hangsx' },
+    { title: 'Năm SX', dataIndex: 'namsx' },
+    { title: 'Nước SX', dataIndex: 'nuocsx' },
+    { title: 'Thông số KT', dataIndex: 'thongsokt' },
+    { title: 'Ghi chú', dataIndex: 'ghichu' },
     {
       title: 'Thao tác',
       render: (_, record) => (
@@ -138,10 +153,10 @@ function Danhmucdonvi() {
         onCancel={() => setOpenModal(false)}
         zIndex={1500}
       >
-        <DonviForm form={form} onSubmit={handleSubmit} onCancel={() => setOpenModal(false)} />
+        <ThietbiForm form={form} onSubmit={handleSubmit} onCancel={() => setOpenModal(false)} />
       </Modal>
     </>
   );
 }
 
-export default Danhmucdonvi;
+export default DanhmucThietbi;

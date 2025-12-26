@@ -20,5 +20,9 @@ export const donviService = {
   deleteDonVi: async (id) => {
     const response = await api.delete(`/donvi/${id}`);
     return response.data;
-  }
+  },
+   deleteManyDonVi: async (ids) => {
+      const response = await api.delete(`/donvi`, { data: { ids } });
+      return response.data;
+    }
 };
