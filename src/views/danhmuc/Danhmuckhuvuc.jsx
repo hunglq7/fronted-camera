@@ -4,10 +4,10 @@ import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import * as XLSX from 'xlsx';
 import SearchBar from '/src/components/SearchBar';
 import ActionBar from '/src/components/ActionBar';
-import DonviForm from '/src/sections/donvi/DonviForm';
+import KhuvucForm from '/src/sections/khuvuc/KhuvucForm';
 import { useKhuVucStore } from '/src/stores/khuvucStore';
 
-function Danhmucdonvi() {
+function Danhmuckhuvuc() {
   const [openModal, setOpenModal] = useState(false);
   const [editing, setEditing] = useState(null);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
@@ -38,6 +38,7 @@ function Danhmucdonvi() {
 
   /** EDIT */
   const handleOpenEdit = (record) => {
+    console.log(record);
     setEditing(record);
     form.setFieldsValue({
       tenkv: record.tenkv
@@ -138,10 +139,10 @@ function Danhmucdonvi() {
         onCancel={() => setOpenModal(false)}
         zIndex={1500}
       >
-        <DonviForm form={form} onSubmit={handleSubmit} onCancel={() => setOpenModal(false)} />
+        <KhuvucForm form={form} onSubmit={handleSubmit} onCancel={() => setOpenModal(false)} />
       </Modal>
     </>
   );
 }
 
-export default Danhmucdonvi;
+export default Danhmuckhuvuc;

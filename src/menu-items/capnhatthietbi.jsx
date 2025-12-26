@@ -39,9 +39,9 @@ const capnhatthietbi = {
       children: [
         {
           id: 'camera',
-          title: 'Cập nhật máy cào',
+          title: 'Cập nhật thiết bị',
           type: 'item',
-          url: '/thietbi/capnhatcamera'
+          url: '/thietbi/capnhatthietbi'
         }
       ]
     }

@@ -9,7 +9,7 @@ const DanhmucDonvi = Loadable(lazy(() => import('views/danhmuc/Danhmucdonvi')));
 const DanhmucThietbi = Loadable(lazy(() => import('views/danhmuc/Danhmucthietbi')));
 const DanhmucKhuvuc = Loadable(lazy(() => import('views/danhmuc/Danhmuckhuvuc')));
 // render - Cạp nhật thiết bị
-const CapnhatCamera = Loadable(lazy(() => import('views/thietbi/CapnhatCamera')));
+const CapnhatThietbi = Loadable(lazy(() => import('views/thietbi/Capnhatthietbi')));
 
 // ==============================|| CHART & MAP ROUTING ||============================== //
 
@@ -45,8 +45,8 @@ const CapnhatthietbiRouters = {
           path: 'thietbi',
           children: [
             {
-              path: 'capnhatcamera',
-              element: <CapnhatCamera />
+              path: 'capnhatthietbi',
+              element: <CapnhatThietbi />
             }
           ]
         }
