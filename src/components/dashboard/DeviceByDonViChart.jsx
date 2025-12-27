@@ -8,7 +8,7 @@ export default function DeviceByDonViChart({ data }) {
         <BarChart data={data}>
           <XAxis dataKey="name" />
           <YAxis allowDecimals={false} />
-          <Tooltip />
+          <Tooltip formatter={(value) => `${value} thiết bị`} />
           <Bar dataKey="value" fill="#1890ff">
             <LabelList dataKey="value" position="top" formatter={(v) => `${v} thiết bị`} />
           </Bar>

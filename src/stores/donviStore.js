@@ -28,7 +28,7 @@ export const useDonViStore = create((set, get) => ({
     set({ loading: true });
     try {
       const data = await donviService.updateDonVi(id, donvi);
-      const updatedDonvis = get().donvis.map((dv) => (dv.id === id ? data : dv));
+      const updatedDonvis = get().donvis.map((dv) => (dv._id === id ? data : dv));
       set({ donvis: updatedDonvis, loading: false });
     } catch (error) {
       message.error("Failed to update donvi");
@@ -39,22 +39,25 @@ export const useDonViStore = create((set, get) => ({
     set({ loading: true });
     try {
       await donviService.deleteDonVi(id);
-        const filteredDonvis = get().donvis.filter((dv) => dv.id !== id);
+        const filteredDonvis = get().donvis.filter((dv) => dv._id !== id);
       set({ donvis: filteredDonvis, loading: false });
     } catch (error) {
       message.error("Failed to delete donvi");
       set({ loading: false });
     }
   },
-  deleteMany: async (ids) => {
+  deleteManyDonVi: async (ids) => {
   set({ loading: true });
   try {
-    await donviService.deleteMany(ids);
+    console.debug('donviStore.deleteManyDonVi -> ids:', ids);
+    const res = await donviService.deleteManyDonVi(ids);
+    console.debug('donviStore.deleteManyDonVi -> backend res:', res);
     set({
-      donvis: get().donvis.filter((dv) => !ids.includes(dv.id)),
+      donvis: get().donvis.filter((dv) => !ids.includes(dv._id)),
       loading: false
     });
-  } catch {
+  } catch (error) {
+    console.error('DELETE MANY ERROR:', error);
     message.error('Xóa nhiều thất bại');
     set({ loading: false });
   }

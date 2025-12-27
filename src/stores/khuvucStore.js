@@ -28,7 +28,7 @@ export const useKhuVucStore = create((set, get) => ({
     set({ loading: true });
     try {
       const data = await khuvucService.updateKhuVuc(id, khuvuc);
-      const updatedKhuVucs = get().khuvucs.map((dv) => (dv.id === id ? data : dv));
+      const updatedKhuVucs = get().khuvucs.map((dv) => (dv._id === id ? data : dv));
       set({ khuvucs: updatedKhuVucs, loading: false });
     } catch (error) {
       message.error("Failed to update khuvuc");
@@ -39,11 +39,25 @@ export const useKhuVucStore = create((set, get) => ({
     set({ loading: true });
     try {
       await khuvucService.deleteKhuVuc(id);
-        const filteredKhuVucs = get().khuvucs.filter((dv) => dv.id !== id);
+        const filteredKhuVucs = get().khuvucs.filter((dv) => dv._id !== id);
       set({ khuvucs: filteredKhuVucs , loading: false });
     } catch (error) {
       message.error("Failed to delete khuvuc");
       set({ loading: false });
     }
   }
+  ,
+  deleteManyKhuVuc: async (ids) => {
+  set({ loading: true });
+  try {
+    console.debug('khuvucStore.deleteManyKhuVuc -> ids:', ids);
+    const res = await khuvucService.deleteManyKhuVuc(ids);
+    console.debug('khuvucStore.deleteManyKhuVuc -> backend res:', res);
+    set({ khuvucs: get().khuvucs.filter((dv) => !ids.includes(dv._id)), loading: false });
+  } catch (error) {
+    console.error('DELETE MANY KHU VUC ERROR:', error);
+    message.error('Xóa nhiều thất bại');
+    set({ loading: false });
+  }
+}
 }));

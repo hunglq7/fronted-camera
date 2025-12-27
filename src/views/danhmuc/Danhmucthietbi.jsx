@@ -22,7 +22,7 @@ function DanhmucThietbi() {
     fetchThietBis();
   }, [fetchThietBis]);
 
-  const dataSource = useMemo(() => thietbis.map((item) => ({ ...item, key: item.id })), [thietbis]);
+  const dataSource = useMemo(() => thietbis.map((item) => ({ ...item, key: item._id })), [thietbis]);
 
   /** SEARCH */
   const filteredData = useMemo(() => {
@@ -125,7 +125,7 @@ function DanhmucThietbi() {
       )
     }
   ];
-
+  console.log(selectedRowKeys);
   return (
     <>
       <Row gutter={8} style={{ marginBottom: 12 }}>
@@ -133,13 +133,14 @@ function DanhmucThietbi() {
         <ActionBar
           handleOpenAdd={handleOpenAdd}
           onDeleteMultiple={handleDeleteMultiple}
+          selectedRowKeys={selectedRowKeys}
           disabledDelete={!selectedRowKeys.length}
           handleExportExcel={handleExportExcel}
         />
       </Row>
 
       <Table
-        rowKey="id"
+        rowKey="_id"
         loading={loading}
         columns={columns}
         dataSource={filteredData}

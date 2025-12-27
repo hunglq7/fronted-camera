@@ -2,7 +2,12 @@ import { Button, Col, Popconfirm } from 'antd';
 
 import { PlusOutlined, DownloadOutlined, DeleteFilled } from '@ant-design/icons';
 
-export default function ActionBar({ handleOpenAdd, onDeleteMultiple, selectedRowKeys = [], handleExportExcel }) {
+export default function ActionBar({ handleOpenAdd, onDeleteMultiple, selectedRowKeys = [], disabledDelete, handleExportExcel }) {
+  // Determine count and disabled state. Support legacy `disabledDelete` boolean prop.
+  const count = Array.isArray(selectedRowKeys) ? selectedRowKeys.length : undefined;
+  const disabled = typeof disabledDelete === 'boolean' ? disabledDelete : (count === undefined ? true : count === 0);
+  const title = typeof count === 'number' ? `Bạn có chắc muốn xóa ${count} bản ghi đã chọn?` : 'Bạn có chắc muốn xóa các bản ghi đã chọn?';
+
   return (
     <>
       <Col>
@@ -12,14 +17,8 @@ export default function ActionBar({ handleOpenAdd, onDeleteMultiple, selectedRow
       </Col>
 
       <Col>
-        <Popconfirm
-          title={`Bạn có chắc muốn xóa ${selectedRowKeys.length} bản ghi đã chọn?`}
-          onConfirm={onDeleteMultiple}
-          okText="Có"
-          cancelText="Không"
-          disabled={selectedRowKeys.length === 0}
-        >
-          <Button danger icon={<DeleteFilled />} disabled={selectedRowKeys.length === 0}>
+        <Popconfirm title={title} onConfirm={onDeleteMultiple} okText="Có" cancelText="Không" disabled={disabled}>
+          <Button danger icon={<DeleteFilled />} disabled={disabled}>
             Xóa đã chọn
           </Button>
         </Popconfirm>

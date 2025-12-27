@@ -21,7 +21,7 @@ function Danhmuckhuvuc() {
     fetchKhuVucs();
   }, [fetchKhuVucs]);
 
-  const dataSource = useMemo(() => khuvucs.map((item) => ({ ...item, key: item.id })), [khuvucs]);
+  const dataSource = useMemo(() => khuvucs.map((item) => ({ ...item, key: item._id })), [khuvucs]);
 
   /** SEARCH */
   const filteredData = useMemo(() => {
@@ -119,13 +119,14 @@ function Danhmuckhuvuc() {
         <ActionBar
           handleOpenAdd={handleOpenAdd}
           onDeleteMultiple={handleDeleteMultiple}
+          selectedRowKeys={selectedRowKeys}
           disabledDelete={!selectedRowKeys.length}
           handleExportExcel={handleExportExcel}
         />
       </Row>
 
       <Table
-        rowKey="id"
+        rowKey="_id"
         loading={loading}
         columns={columns}
         dataSource={filteredData}

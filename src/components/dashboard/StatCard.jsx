@@ -1,9 +1,9 @@
 import { Card, Statistic } from 'antd';
-import MainCard from '/src/components/MainCard';
+import { VideoCameraAddOutlined, VideoCameraOutlined } from '@ant-design/icons';
 export default function StatCard({ title, value, color }) {
   return (
     <Card>
-      <Statistic title={title} value={value} style={{ color }} />
+      <Statistic prefix={<VideoCameraOutlined />} title={title} value={value} styles={color} />
     </Card>
   );
 }

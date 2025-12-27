@@ -4,9 +4,33 @@ import { SaveOutlined } from '@ant-design/icons';
 
 const { TextArea } = Input;
 
-export default function TonghoptbForm({ form, onSubmit, onCancel, thietbiList = [], donviList = [], khuvucList = [] }) {
+export default function TonghoptbForm({
+  form,
+  onSubmit,
+  onCancel,
+  thietbiList = [],
+  donviList = [],
+  khuvucList = [],
+  existingList = [],
+  editing = null
+}) {
+  const validateUniqueIp = (_, value) => {
+    if (!value) return Promise.resolve();
+    const conflict = existingList.some((i) => i.camera_ip === value && i._id !== editing?._id);
+    return conflict ? Promise.reject(new Error('IP Camera đã tồn tại')) : Promise.resolve();
+  };
+
+  const validateUniqueMaql = (_, value) => {
+    if (!value) return Promise.resolve();
+    const conflict = existingList.some((i) => i.maql === value && i._id !== editing?._id);
+    return conflict ? Promise.reject(new Error('Mã quản lý đã tồn tại')) : Promise.resolve();
+  };
+
   return (
     <Form form={form} layout="horizontal" labelCol={{ span: 6 }} wrapperCol={{ span: 17 }} onFinish={onSubmit}>
+      <Form.Item name="maql" label="Mã quản lý" rules={[{ required: true }, { validator: validateUniqueMaql }]}>
+        <Input />
+      </Form.Item>
       <Form.Item name="thietbi_id" label="Thiết bị" rules={[{ required: true }]}>
         <Select placeholder="Chọn thiết bị" allowClear>
           {thietbiList.map((i) => (
@@ -37,7 +61,7 @@ export default function TonghoptbForm({ form, onSubmit, onCancel, thietbiList = 
         </Select>
       </Form.Item>
 
-      <Form.Item name="camera_ip" label="IP Camera">
+      <Form.Item name="camera_ip" label="IP Camera" rules={[{ validator: validateUniqueIp }]}>
         <Input />
       </Form.Item>
 

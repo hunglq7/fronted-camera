@@ -7,9 +7,13 @@ export default function DeviceByKhuVucChart({ data }) {
         <BarChart data={data}>
           <XAxis dataKey="name" />
           <YAxis allowDecimals={false} />
-          <Tooltip />
+          <Tooltip formatter={(value, name) => name === 'value' ? `${value} thiết bị` : `${value}%`} />
           <Bar dataKey="value" fill="#722ed1">
-            <LabelList dataKey="value" position="top" formatter={(v) => `${v} thiết bị`} />
+            <LabelList 
+              dataKey="percentage" 
+              position="top" 
+              formatter={(v) => `${v}%`} 
+            />
           </Bar>
         </BarChart>
       </ResponsiveContainer>

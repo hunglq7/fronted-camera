@@ -7,7 +7,7 @@ import DeviceByDonViChart from '/src/components/dashboard/DeviceByDonViChart';
 import RecentDeviceTable from '/src/components/dashboard/RecentDeviceTable';
 import DeviceByKhuVucChart from '/src/components/dashboard/DeviceByKhuVucChart';
 import DeviceByNgaySDChart from '/src/components/dashboard/DeviceByNgaySDChart';
-import Recharts from '/src/components/Recharts';
+
 import * as XLSX from 'xlsx';
 import dayjs from 'dayjs';
 import SearchBar from '/src/components/SearchBar';
@@ -53,7 +53,10 @@ function Capnhatthietbi() {
       i.trangthai ? map['Trực tuyến']++ : map['Ngoại tuyến']++;
     });
 
-    return Object.entries(map).map(([name, value]) => ({ name, value }));
+    return Object.entries(map).map(([name, value]) => ({
+      name,
+      value // Giữ giá trị tuyệt đối (tổng số thiết bị)
+    }));
   }, [tonghoptbs]);
 
   // 3️⃣ Theo đơn vị
@@ -65,7 +68,10 @@ function Capnhatthietbi() {
       map[name] = (map[name] || 0) + 1;
     });
 
-    return Object.entries(map).map(([name, value]) => ({ name, value }));
+    return Object.entries(map).map(([name, value]) => ({
+      name,
+      value  // Giữ giá trị tuyệt đối (tổng số thiết bị theo đơn vị)
+    }));
   }, [tonghoptbs]);
 
   // Theo Khu vực
@@ -77,9 +83,16 @@ function Capnhatthietbi() {
       map[name] = (map[name] || 0) + 1;
     });
 
-    return Object.entries(map).map(([name, value]) => ({
+    const statsArray = Object.entries(map).map(([name, value]) => ({
       name,
-      value
+      value // Giữ giá trị tuyệt đối cho Y-axis
+    }));
+
+    // Tính % của mỗi khu vực so với tổng thiết bị theo khu vực
+    const totalByKhuvuc = statsArray.reduce((sum, item) => sum + item.value, 0);
+    return statsArray.map((item) => ({
+      ...item,
+      percentage: totalByKhuvuc > 0 ? Math.round((item.value / totalByKhuvuc) * 100) : 0
     }));
   }, [tonghoptbs]);
 
@@ -115,32 +128,16 @@ function Capnhatthietbi() {
     });
 
     return Object.entries(map)
-      .map(([name, value]) => ({ name, value }))
+      .map(([name, value]) => ({
+        name,
+        value // Giữ giá trị tuyệt đối (tổng số thiết bị theo tháng trong năm)
+      }))
       .sort((a, b) => {
         const [m1, y1] = a.name.split('/');
         const [m2, y2] = b.name.split('/');
         return new Date(y1, m1 - 1) - new Date(y2, m2 - 1);
       });
   }, [tonghoptbs, selectedYear]);
-  // const ngaysdStats = useMemo(() => {
-  //   const map = {};
-
-  //   tonghoptbs.forEach((i) => {
-  //     if (!i.ngaysd) return;
-
-  //     const key = dayjs(i.ngaysd).format('MM/YYYY');
-
-  //     map[key] = (map[key] || 0) + 1;
-  //   });
-
-  //   return Object.entries(map)
-  //     .map(([name, value]) => ({ name, value }))
-  //     .sort((a, b) => {
-  //       const [m1, y1] = a.name.split('/');
-  //       const [m2, y2] = b.name.split('/');
-  //       return new Date(y1, m1 - 1) - new Date(y2, m2 - 1);
-  //     });
-  // }, [tonghoptbs]);
 
   /** SEARCH */
 
@@ -152,6 +149,7 @@ function Capnhatthietbi() {
 
     return dataSource.filter((item) =>
       [
+        item.maql,
         item.thietbi_id?.tentb,
         item.donvi_id?.tendv,
         item.khuvuc_id?.tenkv,
@@ -177,6 +175,7 @@ function Capnhatthietbi() {
   const handleOpenEdit = (record) => {
     setEditing(record);
     form.setFieldsValue({
+      maql: record.maql,
       thietbi_id: record.thietbi_id?._id,
       donvi_id: record.donvi_id?._id,
       khuvuc_id: record.khuvuc_id?._id,
@@ -228,6 +227,7 @@ function Capnhatthietbi() {
   const handleExportExcel = () => {
     const exportData = filteredData.map((item, index) => ({
       STT: index + 1,
+      'Mã quản lý': item.maql,
       'Tên thiết bị': item.tentb,
       'Đơn vị': item.tendv,
       'Khu vực': item.tenkv,
@@ -257,6 +257,7 @@ function Capnhatthietbi() {
         </Tag>
       )
     },
+    { title: 'Mã quản lý', dataIndex: 'maql' },
     {
       title: 'Tên thiết bị',
       render: (_, r) => r.thietbi_id?.tentb
@@ -300,10 +301,10 @@ function Capnhatthietbi() {
           <StatCard title="Tổng thiết bị" value={total} />
         </Col>
         <Col span={6}>
-          <StatCard title="Trực tuyến" value={statusStats[0]?.value} color="green" />
+          <StatCard title="Trực tuyến" value={statusStats[0]?.value} color={{ content: { color: '#3f8600' } }} />
         </Col>
         <Col span={6}>
-          <StatCard title="Ngoại tuyến" value={statusStats[1]?.value} color="orange" />
+          <StatCard title="Ngoại tuyến" value={statusStats[1]?.value} color={{ content: { color: '#cf1322' } }} />
         </Col>
         <Col span={6}>
           <StatCard title="Tỷ lệ thiết bị trực tuyến" value={`${Math.round((statusStats[0]?.value / total) * 100 || 0)}%`} />
@@ -345,9 +346,8 @@ function Capnhatthietbi() {
           <RecentDeviceTable data={tonghoptbs} />
         </Col>
       </Row> */}
-      {/* <Recharts data={statusStats} /> */}
 
-      <Row gutter={8} style={{ marginBottom: 12 }}>
+      <Row gutter={8} style={{ marginBottom: 12, marginTop: 12 }}>
         <SearchBar onSearch={setSearchText} />
         <ActionBar
           handleOpenAdd={handleOpenAdd}
@@ -355,6 +355,14 @@ function Capnhatthietbi() {
           disabledDelete={!selectedRowKeys.length}
           handleExportExcel={handleExportExcel}
         />
+      </Row>
+
+      <Row style={{ marginBottom: 16 }}>
+        <Col span={24}>
+          <Tag variant="outlined" color="blue">
+            Tổng số: {filteredData.length} thiết bị
+          </Tag>
+        </Col>
       </Row>
 
       <Table
@@ -369,10 +377,6 @@ function Capnhatthietbi() {
             setSelectedRowKeys(keys);
           }
         }}
-        // rowSelection={{
-        //   selectedRowKeys,
-        //   onChange: setSelectedRowKeys
-        // }}
       />
 
       <Modal
@@ -387,6 +391,8 @@ function Capnhatthietbi() {
           donviList={donvis}
           khuvucList={khuvucs}
           thietbiList={thietbis}
+          existingList={tonghoptbs}
+          editing={editing}
           onSubmit={handleSubmit}
           onCancel={() => setOpenModal(false)}
         />

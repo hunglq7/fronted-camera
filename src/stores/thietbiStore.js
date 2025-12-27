@@ -26,18 +26,26 @@ export const useThietBiStore = create((set, get) => ({
      await thietbiService.updateThietBi(id, payload);
     set({
    thietbis: get().thietbis.map((i) =>
-     i.id === id ? { ...i, ...payload } : i
+     i._id === id ? { ...i, ...payload } : i
    )
 });
   },
 
   deleteThietBi: async (id) => {
     await thietbiService.deleteThietBi(id);
-    set({ thietbis: get().thietbis.filter((i) => i.id !== id) });
+    set({ thietbis: get().thietbis.filter((i) => i._id !== id) });
   },
-
-  deleteManyThietbi: async (ids) => {
-    await thietbiService.deleteManyThietbi(ids);
-    set({ thietbis: get().thietbis.filter((i) => !ids.includes(i.id)) });
+  deleteManyThietBi: async (ids) => {
+    set({ loading: true });
+    try {
+      console.debug('thietbiStore.deleteManyThietBi -> ids:', ids);
+      const res = await thietbiService.deleteManyThietBi(ids);
+      console.debug('thietbiStore.deleteManyThietBi -> backend res:', res);
+      set({ thietbis: get().thietbis.filter((i) => !ids.includes(i._id)), loading: false });
+    } catch (error) {
+      console.error('DELETE MANY THIET BI ERROR:', error);
+      message.error('Xóa nhiều thất bại');
+      set({ loading: false });
+    }
   }
 }));

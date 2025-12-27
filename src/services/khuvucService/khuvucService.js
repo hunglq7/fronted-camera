@@ -21,8 +21,10 @@ export const khuvucService = {
     const response = await api.delete(`/khuvuc/${id}`);
     return response.data;
   },
-   deleteManyKhuVuc: async (ids) => {
-      const response = await api.delete(`/khuvuc`, { data: { ids } });
-      return response.data;
-    }
+  deleteManyKhuVuc: async (ids) => {
+    console.debug('khuvucService.deleteManyKhuVuc -> sending ids:', ids);
+    const response = await api.delete(`/khuvuc/select`, { data: { ids } });
+    console.debug('khuvucService.deleteManyKhuVuc -> response:', response.data);
+    return response.data;
+   }
 };

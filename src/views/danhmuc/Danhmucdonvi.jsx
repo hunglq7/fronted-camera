@@ -117,6 +117,7 @@ function Danhmucdonvi() {
         <ActionBar
           handleOpenAdd={handleOpenAdd}
           onDeleteMultiple={handleDeleteMultiple}
+          selectedRowKeys={selectedRowKeys}
           disabledDelete={!selectedRowKeys.length}
           handleExportExcel={handleExportExcel}
         />
@@ -127,6 +128,7 @@ function Danhmucdonvi() {
         loading={loading}
         columns={columns}
         dataSource={filteredData}
+        selectedRowKeys={selectedRowKeys}
         rowSelection={{ selectedRowKeys, onChange: setSelectedRowKeys }}
       />
 

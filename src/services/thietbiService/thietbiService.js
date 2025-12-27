@@ -21,7 +21,9 @@ export const thietbiService = {
     return response.data;
   },
     deleteManyThietBi: async (ids) => {
-    const response = await api.delete(`/thietbi`, { data: { ids } });
+    console.debug('thietbiService.deleteManyThietBi -> sending ids:', ids);
+    const response = await api.delete(`/thietbi/select`, { data: { ids } });
+    console.debug('thietbiService.deleteManyThietBi -> response:', response.data);
     return response.data;
   }
 

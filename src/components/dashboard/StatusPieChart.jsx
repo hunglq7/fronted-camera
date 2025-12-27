@@ -9,12 +9,12 @@ export default function StatusPieChart({ data }) {
     <MainCard title="Thiết bị theo trạng thái">
       <ResponsiveContainer width="100%" height={300}>
         <PieChart>
-          <Pie data={data} dataKey="value" nameKey="name" label>
+          <Pie data={data} dataKey="value" nameKey="name" label={(entry) => `${entry.name}: ${entry.value}`}>
             {data.map((_, i) => (
               <Cell key={i} fill={COLORS[i % COLORS.length]} />
             ))}
           </Pie>
-          <Tooltip />
+          <Tooltip formatter={(value) => `${value} thiết bị`} />
           <Legend />
         </PieChart>
       </ResponsiveContainer>
