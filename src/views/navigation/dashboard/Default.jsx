@@ -141,10 +141,10 @@ export default function DefaultPage() {
         </Col>
       </Row>
       <Row className="mt-3">
-        <Col span={12}>
+        <Col span={{ xs: 24, md: 12 }}>
           <StatusPieChart data={statusStats} />
         </Col>
-        <Col span={12}>
+        <Col span={{ xs: 24, md: 12 }}>
           <Row justify="end" style={{ marginBottom: 12 }}>
             <Col>
               <Select
