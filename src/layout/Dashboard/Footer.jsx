@@ -25,7 +25,8 @@ export default function Footer() {
 
           {/* Footer Links */}
           <Col xs="auto" className="my-1">
-            <Stack direction="horizontal" gap={3} className="justify-content-center">
+            <p>Version 1</p>
+            {/* <Stack direction="horizontal" gap={3} className="justify-content-center">
               <Nav.Link className="p-0" as="a" href="/">
                 Home
               </Nav.Link>
@@ -35,7 +36,7 @@ export default function Footer() {
               <Nav.Link className="p-0" as="a" href="https://codedthemes.support-hub.io/" target="_blank" rel="noopener noreferrer">
                 Support
               </Nav.Link>
-            </Stack>
+            </Stack> */}
           </Col>
         </Row>
       </div>
