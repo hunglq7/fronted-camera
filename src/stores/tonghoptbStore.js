@@ -22,26 +22,24 @@ export const useTongHopTbStore = create((set, get) => ({
     set({ tonghoptbs: [...get().tonghoptbs, data] });
   },
 
- updateTongHopTb: async (id, payload) => {
-  await tonghoptbService.updateTongHopTb(id, payload);
-  set({
-    tonghoptbs: get().tonghoptbs.map((i) =>
-      i._id === id ? { ...i, ...payload } : i
-    )
-  });
-},
+  updateTongHopTb: async (id, payload) => {
+    await tonghoptbService.updateTongHopTb(id, payload);
+    set({
+      tonghoptbs: get().tonghoptbs.map((i) => (i._id === id ? { ...i, ...payload } : i))
+    });
+  },
 
-deleteTongHopTb: async (id) => {
-  await tonghoptbService.deleteTongHopTb(id);
-  set({
-    tonghoptbs: get().tonghoptbs.filter((i) => i._id !== id)
-  });
-},
+  deleteTongHopTb: async (id) => {
+    await tonghoptbService.deleteTongHopTb(id);
+    set({
+      tonghoptbs: get().tonghoptbs.filter((i) => i._id !== id)
+    });
+  },
 
-deleteManyTongHopTb: async (ids) => {
-  await tonghoptbService.deleteManyTongHopTb(ids);
-  set({
-    tonghoptbs: get().tonghoptbs.filter((i) => !ids.includes(i._id))
-  });
-}
+  deleteManyTongHopTb: async (ids) => {
+    await tonghoptbService.deleteManyTongHopTb(ids);
+    set({
+      tonghoptbs: get().tonghoptbs.filter((i) => !ids.includes(i._id))
+    });
+  }
 }));

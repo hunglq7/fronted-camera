@@ -1,4 +1,3 @@
-
 export const usernameSchema = {
   required: 'User name is required',
   pattern: { value: /^[a-zA-Z\s]+$/, message: 'Invalid user name' }

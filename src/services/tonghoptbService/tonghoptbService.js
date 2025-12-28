@@ -1,7 +1,7 @@
-import api from "/src/lib/axios";
+import api from '/src/lib/axios';
 export const tonghoptbService = {
   getAllTongHopTb: async () => {
-    const response = await api.get("/tonghoptb");
+    const response = await api.get('/tonghoptb');
     return response.data;
   },
   getTongHopTbById: async (id) => {
@@ -9,7 +9,7 @@ export const tonghoptbService = {
     return response.data;
   },
   createTongHopTb: async (tonghoptb) => {
-    const response = await api.post("/tonghoptb", tonghoptb);
+    const response = await api.post('/tonghoptb', tonghoptb);
     return response.data;
   },
   updateTongHopTb: async (id, tonghoptb) => {
@@ -20,9 +20,8 @@ export const tonghoptbService = {
     const response = await api.delete(`/tonghoptb/${id}`);
     return response.data;
   },
-    deleteManyTongHopTb: async (ids) => {
+  deleteManyTongHopTb: async (ids) => {
     const response = await api.delete(`/tonghoptb`, { data: { ids } });
     return response.data;
   }
-
 };

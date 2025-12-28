@@ -5,7 +5,7 @@ import { PlusOutlined, DownloadOutlined, DeleteFilled } from '@ant-design/icons'
 export default function ActionBar({ handleOpenAdd, onDeleteMultiple, selectedRowKeys = [], disabledDelete, handleExportExcel }) {
   // Determine count and disabled state. Support legacy `disabledDelete` boolean prop.
   const count = Array.isArray(selectedRowKeys) ? selectedRowKeys.length : undefined;
-  const disabled = typeof disabledDelete === 'boolean' ? disabledDelete : (count === undefined ? true : count === 0);
+  const disabled = typeof disabledDelete === 'boolean' ? disabledDelete : count === undefined ? true : count === 0;
   const title = typeof count === 'number' ? `Bạn có chắc muốn xóa ${count} bản ghi đã chọn?` : 'Bạn có chắc muốn xóa các bản ghi đã chọn?';
 
   return (

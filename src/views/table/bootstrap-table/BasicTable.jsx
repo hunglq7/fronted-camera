@@ -26,7 +26,7 @@ export default function BasicTablePage() {
       <Col sm={6}>
         <StripedTable />
       </Col>
-      <Col >
+      <Col>
         <ContextualTable />
       </Col>
     </Row>

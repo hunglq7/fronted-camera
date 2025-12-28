@@ -1,7 +1,6 @@
-import { create } from "zustand";
-import{message} from 'antd'
-import { authService } from "/src/services/authService/authService";
-
+import { create } from 'zustand';
+import { message } from 'antd';
+import { authService } from '/src/services/authService/authService';
 
 export const useAuthStore = create((set, get) => ({
   accessToken: null,
@@ -22,10 +21,10 @@ export const useAuthStore = create((set, get) => ({
       //  gọi api
       await authService.signUp(username, password, email, firstName, lastName);
 
-      message.success("Đăng ký thành công! Bạn sẽ được chuyển sang trang đăng nhập.");
+      message.success('Đăng ký thành công! Bạn sẽ được chuyển sang trang đăng nhập.');
     } catch (error) {
       console.error(error);
-      message.error("Đăng ký không thành công");
+      message.error('Đăng ký không thành công');
     } finally {
       set({ loading: false });
     }
@@ -40,10 +39,10 @@ export const useAuthStore = create((set, get) => ({
 
       await get().fetchMe();
 
-      message.success("Chào mừng bạn quay lại với phần mềm quản lý thiết bị 🎉");
+      message.success('Chào mừng bạn quay lại với phần mềm quản lý thiết bị 🎉');
     } catch (error) {
       console.error(error);
-      message.error("Đăng nhập không thành công!");
+      message.error('Đăng nhập không thành công!');
     } finally {
       set({ loading: false });
     }
@@ -53,10 +52,10 @@ export const useAuthStore = create((set, get) => ({
     try {
       get().clearState();
       await authService.signOut();
-      message.success("Logout thành công!");
+      message.success('Logout thành công!');
     } catch (error) {
       console.error(error);
-      message.error("Lỗi xảy ra khi logout. Hãy thử lại!");
+      message.error('Lỗi xảy ra khi logout. Hãy thử lại!');
     }
   },
 
@@ -69,7 +68,7 @@ export const useAuthStore = create((set, get) => ({
     } catch (error) {
       console.error(error);
       set({ user: null, accessToken: null });
-      message.error("Lỗi xảy ra khi lấy dữ liệu người dùng. Hãy thử lại!");
+      message.error('Lỗi xảy ra khi lấy dữ liệu người dùng. Hãy thử lại!');
     } finally {
       set({ loading: false });
     }
@@ -88,10 +87,10 @@ export const useAuthStore = create((set, get) => ({
       }
     } catch (error) {
       console.error(error);
-      message.error("Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại!");
+      message.error('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại!');
       get().clearState();
     } finally {
       set({ loading: false });
     }
-  },
+  }
 }));

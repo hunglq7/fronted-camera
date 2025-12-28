@@ -33,13 +33,13 @@ const capnhatthietbi = {
     },
     {
       id: 'thietbi',
-      title: 'Thiết bị',
+      title: 'Cập nhật thiết bị',
       type: 'collapse',
       icon: <i className="ph ph-map-trifold" />,
       children: [
         {
           id: 'camera',
-          title: 'Cập nhật thiết bị',
+          title: 'Cập nhật Camera',
           type: 'item',
           url: '/thietbi/capnhatthietbi'
         }

@@ -2,13 +2,13 @@ const icons = { dashboard: <i className="ph ph-house-line" />, layouts: <i class
 
 const navigation = {
   id: 'group-dashboard-loading-unique',
-  title: 'Navigation',
+  title: 'quản lý thiết bị',
   type: 'group',
   icon: icons.dashboard,
   children: [
     {
       id: 'dashboard',
-      title: 'Dashboard',
+      title: 'Bảng điều khiển',
       type: 'item',
       icon: icons.dashboard,
       url: '/'

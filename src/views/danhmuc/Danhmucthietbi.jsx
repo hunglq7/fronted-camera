@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Table, Button, Popconfirm, message, Space, Form, Modal, Row } from 'antd';
+import { Table, Button, Popconfirm, message, Space, Form, Modal, Row, Flex } from 'antd';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import * as XLSX from 'xlsx';
 
@@ -107,14 +107,15 @@ function DanhmucThietbi() {
   };
 
   const columns = [
-    { title: 'Tên thiết bị', dataIndex: 'tentb' },
-    { title: 'Hãng SX', dataIndex: 'hangsx' },
+    { title: 'Tên thiết bị', dataIndex: 'tentb', fixed: 'start' },
+    { title: 'Hãng SX', dataIndex: 'hangsx', fixed: 'start' },
     { title: 'Năm SX', dataIndex: 'namsx' },
     { title: 'Nước SX', dataIndex: 'nuocsx' },
     { title: 'Thông số KT', dataIndex: 'thongsokt' },
     { title: 'Ghi chú', dataIndex: 'ghichu' },
     {
       title: 'Thao tác',
+      fixed: 'end',
       render: (_, record) => (
         <Space>
           <Button icon={<EditOutlined />} onClick={() => handleOpenEdit(record)} />

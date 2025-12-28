@@ -7,7 +7,7 @@ const pages = {
   children: [
     {
       id: 'authentication',
-      title: 'Authentication',
+      title: 'Hệ thống',
       type: 'collapse',
       icon: <i className="ph ph-lock-key" />,
       children: [

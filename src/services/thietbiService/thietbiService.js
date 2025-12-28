@@ -1,7 +1,7 @@
-import api from "/src/lib/axios";
+import api from '/src/lib/axios';
 export const thietbiService = {
   getAllThietBi: async () => {
-    const response = await api.get("/thietbi");
+    const response = await api.get('/thietbi');
     return response.data;
   },
   getThietBiById: async (id) => {
@@ -9,7 +9,7 @@ export const thietbiService = {
     return response.data;
   },
   createThietBi: async (thietbi) => {
-    const response = await api.post("/thietbi", thietbi);
+    const response = await api.post('/thietbi', thietbi);
     return response.data;
   },
   updateThietBi: async (id, thietbi) => {
@@ -20,11 +20,10 @@ export const thietbiService = {
     const response = await api.delete(`/thietbi/${id}`);
     return response.data;
   },
-    deleteManyThietBi: async (ids) => {
+  deleteManyThietBi: async (ids) => {
     console.debug('thietbiService.deleteManyThietBi -> sending ids:', ids);
     const response = await api.delete(`/thietbi/select`, { data: { ids } });
     console.debug('thietbiService.deleteManyThietBi -> response:', response.data);
     return response.data;
   }
-
 };

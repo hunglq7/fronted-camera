@@ -20,27 +20,25 @@ function KhuvucForm({ onSubmit, form, onCancel }) {
         <Input />
       </Form.Item>
 
-      <Form.Item>
-        <Flex justify="start">
-          <Space>
-            <Button
-              type="primary"
-              htmlType="submit" // 👈 gọi handleSubmit
-              icon={<SaveOutlined />}
-            >
-              Lưu
-            </Button>
+      <Form.Item wrapperCol={{ offset: 6 }}>
+        <Space>
+          <Button
+            type="primary"
+            htmlType="submit" // 👈 gọi handleSubmit
+            icon={<SaveOutlined />}
+          >
+            Lưu
+          </Button>
 
-            <Button
-              onClick={() => {
-                form.resetFields(); // optional
-                onCancel?.(); // 👈 đóng form
-              }}
-            >
-              Hủy
-            </Button>
-          </Space>
-        </Flex>
+          <Button
+            onClick={() => {
+              form.resetFields(); // optional
+              onCancel?.(); // 👈 đóng form
+            }}
+          >
+            Hủy
+          </Button>
+        </Space>
       </Form.Item>
     </Form>
   );

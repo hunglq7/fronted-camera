@@ -1,10 +1,9 @@
-import { useAuthStore } from "/src/stores/useAuthStore";
-import axios from "axios";
+import { useAuthStore } from '/src/stores/useAuthStore';
+import axios from 'axios';
 
 const api = axios.create({
-  baseURL:
-    import.meta.env.MODE === "development" ? "http://localhost:5001/api" : "/api",
-  withCredentials: true,
+  baseURL: import.meta.env.MODE === 'development' ? 'http://localhost:5001/api' : '/api',
+  withCredentials: true
 });
 
 // gắn access token vào req header
@@ -26,9 +25,9 @@ api.interceptors.response.use(
 
     // những api không cần check
     if (
-      originalRequest.url.includes("/auth/signin") ||
-      originalRequest.url.includes("/auth/signup") ||
-      originalRequest.url.includes("/auth/refresh")
+      originalRequest.url.includes('/auth/signin') ||
+      originalRequest.url.includes('/auth/signup') ||
+      originalRequest.url.includes('/auth/refresh')
     ) {
       return Promise.reject(error);
     }
@@ -39,7 +38,7 @@ api.interceptors.response.use(
       originalRequest._retryCount += 1;
 
       try {
-        const res = await api.post("/auth/refresh", { withCredentials: true });
+        const res = await api.post('/auth/refresh', { withCredentials: true });
         const newAccessToken = res.data.accessToken;
 
         useAuthStore.getState().setAccessToken(newAccessToken);

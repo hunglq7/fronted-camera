@@ -11,7 +11,7 @@ export default function DeviceByNgaySDChart({ data }) {
       <ResponsiveContainer width="100%" height={320}>
         <BarChart data={data}>
           <XAxis dataKey="name" />
-          <YAxis allowDecimals={false} />
+          <YAxis domain={[0, total]} allowDecimals={false} />
           <Tooltip formatter={(v) => [`${v} thiết bị`, 'Số lượng']} />
 
           <Bar dataKey="value" fill="#13c2c2">

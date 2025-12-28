@@ -36,111 +36,11 @@ function Capnhatthietbi() {
     fetchDonVis();
     fetchKhuVucs();
     fetchThietBis();
-  }, []);
+  }, [fetchTongHopTbs, fetchDonVis, fetchKhuVucs, fetchThietBis]);
 
   const dataSource = useMemo(() => tonghoptbs, [tonghoptbs]);
 
-  //Recharts
-  // 1️⃣ Tổng số
-  const total = tonghoptbs.length;
-
-  // 2️⃣ Theo trạng thái
-
-  const statusStats = useMemo(() => {
-    const map = { 'Trực tuyến': 0, 'Ngoại tuyến': 0 };
-
-    tonghoptbs.forEach((i) => {
-      i.trangthai ? map['Trực tuyến']++ : map['Ngoại tuyến']++;
-    });
-
-    return Object.entries(map).map(([name, value]) => ({
-      name,
-      value // Giữ giá trị tuyệt đối (tổng số thiết bị)
-    }));
-  }, [tonghoptbs]);
-
-  // 3️⃣ Theo đơn vị
-  const donviStats = useMemo(() => {
-    const map = {};
-
-    tonghoptbs.forEach((i) => {
-      const name = i.donvi_id?.tendv || 'Khác';
-      map[name] = (map[name] || 0) + 1;
-    });
-
-    return Object.entries(map).map(([name, value]) => ({
-      name,
-      value  // Giữ giá trị tuyệt đối (tổng số thiết bị theo đơn vị)
-    }));
-  }, [tonghoptbs]);
-
-  // Theo Khu vực
-  const khuvucStats = useMemo(() => {
-    const map = {};
-
-    tonghoptbs.forEach((i) => {
-      const name = i.khuvuc_id?.tenkv || 'Chưa phân khu';
-      map[name] = (map[name] || 0) + 1;
-    });
-
-    const statsArray = Object.entries(map).map(([name, value]) => ({
-      name,
-      value // Giữ giá trị tuyệt đối cho Y-axis
-    }));
-
-    // Tính % của mỗi khu vực so với tổng thiết bị theo khu vực
-    const totalByKhuvuc = statsArray.reduce((sum, item) => sum + item.value, 0);
-    return statsArray.map((item) => ({
-      ...item,
-      percentage: totalByKhuvuc > 0 ? Math.round((item.value / totalByKhuvuc) * 100) : 0
-    }));
-  }, [tonghoptbs]);
-
-  //Biểu đồ theo năm sử dụng
-  //2️⃣ State năm đang chọn
-  const currentYear = dayjs().year();
-  const [selectedYear, setSelectedYear] = useState(currentYear);
-
-  //3️⃣ Danh sách năm (tự động sinh)
-  const yearOptions = useMemo(() => {
-    const years = new Set();
-
-    tonghoptbs.forEach((i) => {
-      if (i.ngaysd) {
-        years.add(dayjs(i.ngaysd).year());
-      }
-    });
-
-    return Array.from(years).sort((a, b) => b - a);
-  }, [tonghoptbs]);
-
-  const ngaysdStats = useMemo(() => {
-    const map = {};
-
-    tonghoptbs.forEach((i) => {
-      if (!i.ngaysd) return;
-
-      const year = dayjs(i.ngaysd).year();
-      if (year !== selectedYear) return; // 🔥 FILTER NĂM
-
-      const key = dayjs(i.ngaysd).format('MM/YYYY');
-      map[key] = (map[key] || 0) + 1;
-    });
-
-    return Object.entries(map)
-      .map(([name, value]) => ({
-        name,
-        value // Giữ giá trị tuyệt đối (tổng số thiết bị theo tháng trong năm)
-      }))
-      .sort((a, b) => {
-        const [m1, y1] = a.name.split('/');
-        const [m2, y2] = b.name.split('/');
-        return new Date(y1, m1 - 1) - new Date(y2, m2 - 1);
-      });
-  }, [tonghoptbs, selectedYear]);
-
   /** SEARCH */
-
   const normalize = (v) => (v ?? '').toString().toLowerCase();
   const filteredData = useMemo(() => {
     if (!searchText) return dataSource;
@@ -228,44 +128,48 @@ function Capnhatthietbi() {
     const exportData = filteredData.map((item, index) => ({
       STT: index + 1,
       'Mã quản lý': item.maql,
-      'Tên thiết bị': item.tentb,
-      'Đơn vị': item.tendv,
-      'Khu vực': item.tenkv,
+      'Tên thiết bị': item.thietbi_id?.tentb,
+      'Đơn vị': item.donvi_id?.tendv,
+      'Khu vực': item.khuvuc_id?.tenkv,
       'Địa chỉ Camera': item.camera_ip,
-      'Tình trạng': item.trangthai,
-      'Ngày SD': item.ngaysd,
+      'Tình trạng': item.trangthai ? 'Trực tuyến' : 'Ngoại tuyến',
+      'Ngày SD': item.ngaysd ? dayjs(item.ngaysd).format('DD/MM/YYYY') : '',
       'Vị trí lắp': item.vitri_lapdat,
       'Ghi chú': item.ghichu
     }));
-
-    const ws = XLSX.utils.json_to_sheet(exportData);
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Tong-Hop_Thiet_Bi');
-    XLSX.writeFile(wb, 'Tong-hop-thiet-bi.xlsx');
+    const worksheet = XLSX.utils.json_to_sheet(exportData, {
+      header: ['STT', 'Mã quản lý', 'Tên thiết bị', 'Đơn vị', 'Khu vực', 'Địa chỉ Camera', 'Tình trạng', 'Ngày SD', 'Vị trí lắp', 'Ghi chú']
+    });
+    worksheet['!cols'] = [
+      { wch: 3 },
+      { wch: 10 },
+      { wch: 15 },
+      { wch: 15 },
+      { wch: 16 },
+      { wch: 16 },
+      { wch: 15 },
+      { wch: 15 },
+      { wch: 22 },
+      { wch: 16 }
+    ];
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Tonghopthietbi');
+    XLSX.writeFile(workbook, 'Tong-hop-thiet-bi.xlsx');
   };
 
   const columns = [
+    { title: 'Mã quản lý', dataIndex: 'maql', fixed: 'start', width: 100 },
     {
-      title: 'Tình trạng',
-      render: (_, r) => (
-        <Tag
-          variant="solid"
-          icon={r.trangthai ? <CheckCircleOutlined /> : <CloseCircleOutlined spin />}
-          color={r.trangthai ? 'green' : 'red'}
-        >
-          {r.trangthai ? 'Trực tuyến' : 'Ngoại tuyến'}
-        </Tag>
-      )
+      title: 'Đơn vị',
+      fixed: 'start',
+      width: 100,
+      render: (_, r) => r.donvi_id?.tendv
     },
-    { title: 'Mã quản lý', dataIndex: 'maql' },
     {
       title: 'Tên thiết bị',
       render: (_, r) => r.thietbi_id?.tentb
     },
-    {
-      title: 'Đơn vị',
-      render: (_, r) => r.donvi_id?.tendv
-    },
+
     {
       title: 'Khu vực',
       render: (_, r) => r.khuvuc_id?.tenkv
@@ -279,9 +183,24 @@ function Capnhatthietbi() {
       render: (value) => (value ? dayjs(value).format('DD/MM/YYYY') : '')
     },
     { title: 'Vị trí lắp', dataIndex: 'vitri_lapdat' },
+    {
+      title: 'Tình trạng',
+      render: (_, r) => (
+        <Tag
+          variant="solid"
+          icon={r.trangthai ? <CheckCircleOutlined /> : <CloseCircleOutlined spin />}
+          color={r.trangthai ? 'green' : 'red'}
+        >
+          {r.trangthai ? 'Trực tuyến' : 'Ngoại tuyến'}
+        </Tag>
+      )
+    },
     { title: 'Ghi chú', dataIndex: 'ghichu' },
     {
       title: 'Thao tác',
+      key: 'operation',
+      fixed: 'end',
+      width: 100,
       render: (_, record) => (
         <Space>
           <Button icon={<EditOutlined />} onClick={() => handleOpenEdit(record)} />
@@ -295,58 +214,6 @@ function Capnhatthietbi() {
 
   return (
     <>
-      {/* KPI */}
-      <Row gutter={16}>
-        <Col span={6}>
-          <StatCard title="Tổng thiết bị" value={total} />
-        </Col>
-        <Col span={6}>
-          <StatCard title="Trực tuyến" value={statusStats[0]?.value} color={{ content: { color: '#3f8600' } }} />
-        </Col>
-        <Col span={6}>
-          <StatCard title="Ngoại tuyến" value={statusStats[1]?.value} color={{ content: { color: '#cf1322' } }} />
-        </Col>
-        <Col span={6}>
-          <StatCard title="Tỷ lệ thiết bị trực tuyến" value={`${Math.round((statusStats[0]?.value / total) * 100 || 0)}%`} />
-        </Col>
-      </Row>
-
-      {/* Charts */}
-      <Row gutter={16} style={{ marginTop: 24 }}>
-        <Col span={12}>
-          <StatusPieChart data={statusStats} />
-        </Col>
-        <Col span={12}>
-          <DeviceByDonViChart data={donviStats} />
-        </Col>
-        <Col span={12}>
-          <DeviceByKhuVucChart data={khuvucStats} />
-        </Col>
-        <Col span={12}>
-          <Row justify="end" style={{ marginBottom: 12 }}>
-            <Col>
-              <Select
-                value={selectedYear}
-                onChange={setSelectedYear}
-                style={{ width: 120 }}
-                options={yearOptions.map((y) => ({
-                  label: `Năm ${y}`,
-                  value: y
-                }))}
-              />
-            </Col>
-          </Row>
-          <DeviceByNgaySDChart data={ngaysdStats} />
-        </Col>
-      </Row>
-
-      {/* Table */}
-      {/* <Row style={{ marginTop: 24 }}>
-        <Col span={24}>
-          <RecentDeviceTable data={tonghoptbs} />
-        </Col>
-      </Row> */}
-
       <Row gutter={8} style={{ marginBottom: 12, marginTop: 12 }}>
         <SearchBar onSearch={setSearchText} />
         <ActionBar

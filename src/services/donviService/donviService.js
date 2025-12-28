@@ -1,8 +1,8 @@
-import api from "/src/lib/axios";
+import api from '/src/lib/axios';
 
 export const donviService = {
   getAllDonVi: async () => {
-    const response = await api.get("/donvi");
+    const response = await api.get('/donvi');
     return response.data;
   },
   getDonViById: async (id) => {
@@ -10,7 +10,7 @@ export const donviService = {
     return response.data;
   },
   createDonVi: async (donvi) => {
-    const response = await api.post("/donvi", donvi);
+    const response = await api.post('/donvi', donvi);
     return response.data;
   },
   updateDonVi: async (id, donvi) => {
@@ -26,5 +26,5 @@ export const donviService = {
     const response = await api.delete(`/donvi/select`, { data: { ids } });
     console.debug('donviService.deleteManyDonVi -> response:', response.data);
     return response.data;
-   }
+  }
 };

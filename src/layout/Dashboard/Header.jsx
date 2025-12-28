@@ -123,58 +123,6 @@ export default function Header() {
         <div className="ms-auto">
           <Nav className="list-unstyled">
             <Dropdown className="pc-h-item" align="end">
-              <Dropdown.Toggle className="pc-head-link me-0 arrow-none" variant="link" id="notification-dropdown">
-                <i className="ph ph-bell" />
-                <span className="badge bg-success pc-h-badge">3</span>
-              </Dropdown.Toggle>
-
-              <Dropdown.Menu className="dropdown-notification pc-h-dropdown">
-                <Dropdown.Header className="d-flex align-items-center justify-content-between">
-                  <h5 className="m-0">Notifications</h5>
-                  <Link className="btn btn-link btn-sm" to="#">
-                    Mark all read
-                  </Link>
-                </Dropdown.Header>
-                <SimpleBarScroll style={{ maxHeight: 'calc(100vh - 215px)' }}>
-                  <div className="dropdown-body text-wrap position-relative">
-                    {notifications.map((notification, index) => (
-                      <React.Fragment key={notification.id}>
-                        {index === 0 || notifications[index - 1].date !== notification.date ? (
-                          <p className="text-span">{notification.date}</p>
-                        ) : null}
-                        <MainCard className="mb-0">
-                          <Stack direction="horizontal" gap={3}>
-                            <Image className="img-radius avatar rounded-0" src={notification.avatar} alt="Generic placeholder image" />
-                            <div>
-                              <span className="float-end text-sm text-muted">{notification.time}</span>
-                              <h5 className="text-body mb-2">{notification.title}</h5>
-                              <p className="mb-0">{notification.description}</p>
-                              {notification.actions && (
-                                <div className="mt-2">
-                                  <Button variant="outline-secondary" size="sm" className="me-2">
-                                    Decline
-                                  </Button>
-                                  <Button variant="primary" size="sm">
-                                    Accept
-                                  </Button>
-                                </div>
-                              )}
-                            </div>
-                          </Stack>
-                        </MainCard>
-                      </React.Fragment>
-                    ))}
-                  </div>
-                </SimpleBarScroll>
-
-                <div className="text-center py-2">
-                  <Link to="#!" className="link-danger">
-                    Clear all Notifications
-                  </Link>
-                </div>
-              </Dropdown.Menu>
-            </Dropdown>
-            <Dropdown className="pc-h-item" align="end">
               <Dropdown.Toggle
                 className="pc-head-link arrow-none me-0"
                 variant="link"

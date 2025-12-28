@@ -1,8 +1,8 @@
-import api from "/src/lib/axios";
+import api from '/src/lib/axios';
 
 export const khuvucService = {
   getAllKhuVuc: async () => {
-    const response = await api.get("/khuvuc");
+    const response = await api.get('/khuvuc');
     return response.data;
   },
   getKhuVucId: async (id) => {
@@ -10,7 +10,7 @@ export const khuvucService = {
     return response.data;
   },
   createKhuVuc: async (khuvuc) => {
-    const response = await api.post("/khuvuc", khuvuc);
+    const response = await api.post('/khuvuc', khuvuc);
     return response.data;
   },
   updateKhuVuc: async (id, khuvuc) => {
@@ -26,5 +26,5 @@ export const khuvucService = {
     const response = await api.delete(`/khuvuc/select`, { data: { ids } });
     console.debug('khuvucService.deleteManyKhuVuc -> response:', response.data);
     return response.data;
-   }
+  }
 };

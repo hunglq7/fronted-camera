@@ -23,12 +23,10 @@ export const useThietBiStore = create((set, get) => ({
   },
 
   updateThietBi: async (id, payload) => {
-     await thietbiService.updateThietBi(id, payload);
+    await thietbiService.updateThietBi(id, payload);
     set({
-   thietbis: get().thietbis.map((i) =>
-     i._id === id ? { ...i, ...payload } : i
-   )
-});
+      thietbis: get().thietbis.map((i) => (i._id === id ? { ...i, ...payload } : i))
+    });
   },
 
   deleteThietBi: async (id) => {
