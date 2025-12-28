@@ -2,7 +2,7 @@ import { useAuthStore } from '/src/stores/useAuthStore';
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: import.meta.env.MODE === 'development' ? 'https://camera-x3yg.onrender.com/api' : '/api',
+  baseURL: import.meta.env.MODE === 'development' ? 'http://localhost:5001/api' : 'https://camera-x3yg.onrender.com/api',
   withCredentials: true
 });
 
