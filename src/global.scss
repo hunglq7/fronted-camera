@@ -20,3 +20,10 @@
   top: 16px;
   height: 0;
 }
+
+.action-bar-wrapper {
+  margin-top: 6px;
+  @include media-breakpoint-up(md) {
+    margin-top: 0;
+  }
+}

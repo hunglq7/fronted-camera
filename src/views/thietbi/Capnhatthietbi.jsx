@@ -214,8 +214,9 @@ function Capnhatthietbi() {
 
   return (
     <>
-      <Row gutter={8} style={{ marginBottom: 12, marginTop: 12 }}>
+      <Row gutter={{ xs: 6, md: 8 }} style={{ marginBottom: 12, marginTop: 12 }}>
         <SearchBar onSearch={setSearchText} />
+
         <ActionBar
           handleOpenAdd={handleOpenAdd}
           onDeleteMultiple={handleDeleteMultiple}

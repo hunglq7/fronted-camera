@@ -17,7 +17,12 @@ export default function RecentDeviceTable({ data }) {
 
   return (
     <Card title="Thiết bị gần đây">
-      <Table rowKey="_id" columns={columns} dataSource={data.slice(0, 5)} pagination={false} />
+      <Table
+        rowKey="_id"
+        columns={columns}
+        dataSource={data.sort((a, b) => new Date(b.ngaysd || 0) - new Date(a.ngaysd || 0))}
+        pagination={{ pageSize: 5 }}
+      />
     </Card>
   );
 }
