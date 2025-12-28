@@ -8,7 +8,7 @@ export const authService = {
   },
 
   signIn: async (username, password) => {
-    const res = await api.post('auth/signin', { username, password }, { withCredentials: true });
+    const res = await api.post('/auth/signin', { username, password }, { withCredentials: true });
     return res.data; // access token
   },
 
