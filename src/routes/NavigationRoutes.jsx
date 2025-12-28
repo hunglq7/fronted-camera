@@ -6,7 +6,7 @@ import DashboardLayout from 'layout/Dashboard';
 import ProtectRouter from '../routes/ProtectRouter';
 // render - dashboard pages
 const DefaultPages = Loadable(lazy(() => import('views/navigation/dashboard/Default')));
-const LoginPages = Loadable(lazy(() => import('views/auth/login/login')));
+const LoginPages = Loadable(lazy(() => import('views/auth/login/Login')));
 // ==============================|| NAVIGATION ROUTING ||============================== //
 
 const NavigationRoutes = {
