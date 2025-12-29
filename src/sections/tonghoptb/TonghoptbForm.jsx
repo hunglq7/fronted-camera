@@ -61,6 +61,13 @@ export default function TonghoptbForm({
         </Select>
       </Form.Item>
 
+      <Form.Item name="loaitb" label="Loại thiết bị" initialValue="camera_thuong">
+        <Select placeholder="Chọn loại camera" allowClear>
+          <Select.Option value="camera_thuong">Camera thường</Select.Option>
+          <Select.Option value="camera_ai">Camera AI</Select.Option>
+        </Select>
+      </Form.Item>
+
       <Form.Item name="camera_ip" label="IP Camera" rules={[{ validator: validateUniqueIp }]}>
         <Input />
       </Form.Item>

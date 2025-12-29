@@ -1,13 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Table, Button, Popconfirm, message, Space, Form, Modal, Row, Tag, Badge, Col, Select } from 'antd';
 import { EditOutlined, DeleteOutlined, CheckCircleOutlined, CloseCircleOutlined } from '@ant-design/icons';
-import StatCard from '/src/components/dashboard/StatCard';
-import StatusPieChart from '/src/components/dashboard/StatusPieChart';
-import DeviceByDonViChart from '/src/components/dashboard/DeviceByDonViChart';
-import RecentDeviceTable from '/src/components/dashboard/RecentDeviceTable';
-import DeviceByKhuVucChart from '/src/components/dashboard/DeviceByKhuVucChart';
-import DeviceByNgaySDChart from '/src/components/dashboard/DeviceByNgaySDChart';
-
 import * as XLSX from 'xlsx';
 import dayjs from 'dayjs';
 import SearchBar from '/src/components/SearchBar';
@@ -52,6 +45,7 @@ function Capnhatthietbi() {
         item.maql,
         item.thietbi_id?.tentb,
         item.donvi_id?.tendv,
+        item.loaitb,
         item.khuvuc_id?.tenkv,
         item.camera_ip,
         item.vitri_lapdat,
@@ -77,6 +71,7 @@ function Capnhatthietbi() {
     form.setFieldsValue({
       maql: record.maql,
       thietbi_id: record.thietbi_id?._id,
+      loaitb: record.loaitb,
       donvi_id: record.donvi_id?._id,
       khuvuc_id: record.khuvuc_id?._id,
       camera_ip: record.camera_ip,
@@ -129,6 +124,7 @@ function Capnhatthietbi() {
       STT: index + 1,
       'Mã quản lý': item.maql,
       'Tên thiết bị': item.thietbi_id?.tentb,
+      'Loại thiết bị': item.loaitb,
       'Đơn vị': item.donvi_id?.tendv,
       'Khu vực': item.khuvuc_id?.tenkv,
       'Địa chỉ Camera': item.camera_ip,
@@ -138,11 +134,24 @@ function Capnhatthietbi() {
       'Ghi chú': item.ghichu
     }));
     const worksheet = XLSX.utils.json_to_sheet(exportData, {
-      header: ['STT', 'Mã quản lý', 'Tên thiết bị', 'Đơn vị', 'Khu vực', 'Địa chỉ Camera', 'Tình trạng', 'Ngày SD', 'Vị trí lắp', 'Ghi chú']
+      header: [
+        'STT',
+        'Mã quản lý',
+        'Tên thiết bị',
+        'Loại thiết bị',
+        'Đơn vị',
+        'Khu vực',
+        'Địa chỉ Camera',
+        'Tình trạng',
+        'Ngày SD',
+        'Vị trí lắp',
+        'Ghi chú'
+      ]
     });
     worksheet['!cols'] = [
       { wch: 3 },
       { wch: 10 },
+      { wch: 15 },
       { wch: 15 },
       { wch: 15 },
       { wch: 16 },
@@ -168,6 +177,14 @@ function Capnhatthietbi() {
     {
       title: 'Tên thiết bị',
       render: (_, r) => r.thietbi_id?.tentb
+    },
+    {
+      title: 'Loại thiết bị',
+      render: (_, r) => {
+        if (r.loaitb === 'camera_thuong') return 'Camera thường';
+        if (r.loaitb === 'camera_ai') return 'Camera AI';
+        return r.loaitb;
+      }
     },
 
     {
