@@ -23,5 +23,29 @@ export const tonghoptbService = {
   deleteManyTongHopTb: async (ids) => {
     const response = await api.delete(`/tonghoptb`, { data: { ids } });
     return response.data;
-  }
+  },
+  uploadExcel: async (file) => {
+    const formData = new FormData();
+    formData.append('excelFile', file);
+    const response = await api.post('/tonghoptb/upload-excel', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return response.data;
+  },
+  uploadCameraIpExcel: async (file) => {
+  const formData = new FormData();
+  formData.append('excelFile', file);
+
+  const res = await api.post(
+    '/tonghoptb/upload-camera-ip',
+    formData,
+    { headers: { 'Content-Type': 'multipart/form-data' } }
+  );
+
+  return res.data;
+}
+
 };
+

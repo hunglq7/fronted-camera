@@ -6,6 +6,8 @@ import dayjs from 'dayjs';
 import SearchBar from '/src/components/SearchBar';
 import ActionBar from '/src/components/ActionBar';
 import TonghoptbForm from '/src/sections/tonghoptb/TonghoptbForm';
+import TonghoptbUpload from '/src/sections/tonghoptb/TonghoptbUpload';
+import UploadCameraIpExcel from '../../sections/tonghoptb/UploadCameraIpExcel';
 import { useTongHopTbStore } from '/src/stores/tonghoptbStore';
 import { useDonViStore } from '/src/stores/donviStore';
 import { useThietBiStore } from '/src/stores/thietbiStore';
@@ -32,6 +34,7 @@ function Capnhatthietbi() {
   }, [fetchTongHopTbs, fetchDonVis, fetchKhuVucs, fetchThietBis]);
 
   const dataSource = useMemo(() => tonghoptbs, [tonghoptbs]);
+  console.log(dataSource);
 
   /** SEARCH */
   const normalize = (v) => (v ?? '').toString().toLowerCase();
@@ -239,6 +242,8 @@ function Capnhatthietbi() {
           onDeleteMultiple={handleDeleteMultiple}
           disabledDelete={!selectedRowKeys.length}
           handleExportExcel={handleExportExcel}
+          uploadComponent={<TonghoptbUpload />}
+          uploadCameraIpExcel={<UploadCameraIpExcel />}
         />
       </Row>
 

@@ -1,8 +1,16 @@
 import { Button, Col, Popconfirm } from 'antd';
 
-import { PlusOutlined, DownloadOutlined, DeleteFilled } from '@ant-design/icons';
+import { PlusOutlined, DownloadOutlined, DeleteFilled, UploadOutlined } from '@ant-design/icons';
 
-export default function ActionBar({ handleOpenAdd, onDeleteMultiple, selectedRowKeys = [], disabledDelete, handleExportExcel }) {
+export default function ActionBar({
+  handleOpenAdd,
+  onDeleteMultiple,
+  selectedRowKeys = [],
+  disabledDelete,
+  handleExportExcel,
+  uploadComponent,
+  uploadCameraIpExcel
+}) {
   // Determine count and disabled state. Support legacy `disabledDelete` boolean prop.
   const count = Array.isArray(selectedRowKeys) ? selectedRowKeys.length : undefined;
   const disabled = typeof disabledDelete === 'boolean' ? disabledDelete : count === undefined ? true : count === 0;
@@ -29,6 +37,9 @@ export default function ActionBar({ handleOpenAdd, onDeleteMultiple, selectedRow
           Xuất Excel
         </Button>
       </Col>
+
+      {uploadComponent && <Col>{uploadComponent}</Col>}
+      {uploadCameraIpExcel && <Col>{uploadCameraIpExcel}</Col>}
     </>
   );
 }

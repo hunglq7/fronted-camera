@@ -25,5 +25,15 @@ export const thietbiService = {
     const response = await api.delete(`/thietbi/select`, { data: { ids } });
     console.debug('thietbiService.deleteManyThietBi -> response:', response.data);
     return response.data;
-  }
+  },
+   uploadExcel: async (file) => {
+      const formData = new FormData();
+      formData.append('excelFile', file);
+      const response = await api.post('/thietbi/upload-thietbi-excel', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      return response.data;
+    }
 };

@@ -45,5 +45,11 @@ export const useThietBiStore = create((set, get) => ({
       message.error('Xóa nhiều thất bại');
       set({ loading: false });
     }
+  },
+   uploadExcel: async (file) => {
+    const data = await thietbiService.uploadExcel(file);
+    // Sau khi upload, fetch lại danh sách
+    await get().fetchThietBis();
+    return data;
   }
 }));

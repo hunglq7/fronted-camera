@@ -41,5 +41,18 @@ export const useTongHopTbStore = create((set, get) => ({
     set({
       tonghoptbs: get().tonghoptbs.filter((i) => !ids.includes(i._id))
     });
+  },
+
+  uploadExcel: async (file) => {
+    const data = await tonghoptbService.uploadExcel(file);
+    // Sau khi upload, fetch lại danh sách
+    await get().fetchTongHopTbs();
+    return data;
+  },
+  uploadCameraIpExcel:async(file)=>{
+    const data=await tonghoptbService.uploadCameraIpExcel(file);
+    await get().fetchTongHopTbs();
+    return data;
+
   }
 }));

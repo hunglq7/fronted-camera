@@ -1,6 +1,6 @@
 import React from 'react';
-import { SaveOutlined } from '@ant-design/icons';
-import { Input, Form, Flex, Space, Button } from 'antd';
+import { SaveOutlined, CloseOutlined } from '@ant-design/icons';
+import { Input, Form, Space, Button } from 'antd';
 const { TextArea } = Input;
 
 function ThietbiForm({ onSubmit, form, onCancel }) {
@@ -51,6 +51,9 @@ function ThietbiForm({ onSubmit, form, onCancel }) {
           </Button>
 
           <Button
+            color="danger"
+            variant="outlined"
+            icon={<CloseOutlined />}
             onClick={() => {
               form.resetFields(); // optional
               onCancel?.(); // 👈 đóng form

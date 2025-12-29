@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Table, Button, Popconfirm, message, Space, Form, Modal, Row, Flex } from 'antd';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import * as XLSX from 'xlsx';
-
+import ThietbiUpload from '../../sections/thietbi/ThietbiUpload';
 import SearchBar from '/src/components/SearchBar';
 import ActionBar from '/src/components/ActionBar';
 import ThietbiForm from '/src/sections/thietbi/ThietbiForm';
@@ -126,7 +126,7 @@ function DanhmucThietbi() {
       )
     }
   ];
-  console.log(selectedRowKeys);
+
   return (
     <>
       <Row gutter={8} style={{ marginBottom: 12 }}>
@@ -137,6 +137,7 @@ function DanhmucThietbi() {
           selectedRowKeys={selectedRowKeys}
           disabledDelete={!selectedRowKeys.length}
           handleExportExcel={handleExportExcel}
+          uploadComponent={<ThietbiUpload />}
         />
       </Row>
 
