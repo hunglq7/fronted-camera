@@ -53,6 +53,7 @@ function Capnhatthietbi() {
         item.camera_ip,
         item.vitri_lapdat,
         item.ghichu,
+        item.ngaysd,
         item.trangthai ? 'trực tuyến' : 'ngoại tuyến',
         item.trangthai ? 'Trực tuyến' : 'Ngoại tuyến'
       ]
