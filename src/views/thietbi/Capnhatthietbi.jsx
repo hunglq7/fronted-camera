@@ -34,7 +34,7 @@ function Capnhatthietbi() {
   }, [fetchTongHopTbs, fetchDonVis, fetchKhuVucs, fetchThietBis]);
 
   const dataSource = useMemo(() => tonghoptbs, [tonghoptbs]);
-  console.log(dataSource);
+  console.log('Tổng hợp tb', dataSource);
 
   /** SEARCH */
   const normalize = (v) => (v ?? '').toString().toLowerCase();

@@ -22,7 +22,7 @@ function Danhmuckhuvuc() {
   }, [fetchKhuVucs]);
 
   const dataSource = useMemo(() => khuvucs.map((item) => ({ ...item, key: item._id })), [khuvucs]);
-
+  console.log('Khu vực', dataSource);
   /** SEARCH */
   const filteredData = useMemo(() => {
     if (!searchText) return dataSource;
